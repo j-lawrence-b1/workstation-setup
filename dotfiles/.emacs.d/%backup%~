@@ -1,0 +1,58 @@
+#!/bin/bash -x
+
+# Comment out and label hostnames in /etc/hosts.
+
+cd ~/Desktop/AcrossAllHosts
+
+#  for i in 10.100.4.115 ;
+#  for i in test-01 test-02 test-raid test-home ;
+#  for i in `cat hostslist-08` ;
+#  for i in `cat hostslist | grep -v "^#" ` ;
+#  for i in compile-08 ;
+#  for i in build ;
+#  for i in jannu ;
+#  for i in 10.0.0.4 ;
+#  for i in boomer ;
+#  for i in test-home ;
+#  for i in compile2-04 ;
+#  for i in compile2-01 ;
+#  for i in `cat hostslist | grep -v "^#" ` ;
+#  for i in rain test-home compile-01 compile-02 compile-03 compile-04 compile-05 compile-06 compile-07 compile-08 ;
+#  for i in compile2-home ;
+#  for i in compile3-home compile3-01 compile3-02 compile3-03 compile3-04 compile3-05 ;
+#  for i in eng1 ;
+# for i in `cat hostslist | grep -v "^#" ` ;
+
+#for i in it-ux-1 collector-01 collector-02 collector-02 ;
+#for i in qa-performance-5 qa-performance-2  qa-performance-3  qa-performance-1 ;
+#for i in `sort hostslist | grep -v "^#" |grep compile3 ` ;
+#for i in `sort hostslist | grep -v "^#" ` ;
+#for i in compile3-home2 ;
+#for i in rhel7lone1 rhel7lone2 rhel7lone3 rhel7lone4 rhel7lone5 rhel7lone6 rhel7lone7 ;
+#for i in `sort hostslist | grep -v "^#" |grep compile3 ` ;
+#for i in compile2-home compile2-01 compile2-02 compile2-03 compile2-05 ;
+#for i in `sort hostslist | grep -v "^#" |grep compile3 ` ;
+
+for i in `sort hostslist | grep -v "^#" ` ;
+do
+
+    mkdir -p hosts/${i}
+    touch  hosts/${i}
+    rm -f  hosts/${i}/.complete
+
+    # if they exist, these copies of the original might not be (over)writeable on PC
+    rm -rf hosts/${i}/shadow hosts/${i}/sudoers hosts/${i}/gshadow
+
+    # remove the existing entry from the local known_hosts, if it exists to ensure entry
+    grep -v "${i}"  < ~/.ssh/known_hosts >~/.ssh/known_hosts2
+    chmod 600 ~/.ssh/known_hosts2
+    mv ~/.ssh/known_hosts2 ~/.ssh/known_hosts
+
+    scp root@${i}:/etc/hosts hosts/${i}
+    sed -e 's/^([[:space:]]*)10.100/\1XXXreplacemeXXX/' <hosts/${i}/hosts2 > hosts/${i}/hosts2
+    #scp hosts/${i}/hosts2 root@${i}:/etc/hosts
+
+    touch  hosts/${i}/.complete
+
+done
+

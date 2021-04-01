@@ -1,0 +1,10 @@
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - black
+  - flake8
+  - mysqlclient
+  - pandas
+  - psycopg2
+  - python=3.6

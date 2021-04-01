@@ -1,0 +1,39 @@
+function g {
+    local c=$1
+    shift
+    local args="$*"
+
+    local cmd
+    case "$c" in
+       a) cmd=add;;
+       b) cmd=branch;;
+       C) cmd=checkout;;
+       c) cmd=commit;;
+       f) cmd=fetch;;
+       h) cmd=help;;
+       l) cmd=log;;
+       m) cmd=mv;;
+       P) cmd=push;;
+       p) cmd=pull;;
+       r) cmd=rm;;
+       s) cmd=status;;
+       *) echo "Usage: g [OPTIONS] # Git command shorthand."
+          echo "where:"
+          echo "  a = add"
+          echo "  b = add"
+          echo "  C = checkout"
+          echo "  c = commit"
+          echo "  f = fetch"
+          echo "  h = help"
+          echo "  l = log"
+          echo "  m = mv"
+          echo "  P = pull"
+          echo "  p = pull"
+          echo "  r = rm"
+          echo "  s = "status
+          echo ""
+          return;;
+    esac
+
+    git $cmd $args
+}    

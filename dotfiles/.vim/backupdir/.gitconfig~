@@ -1,0 +1,20 @@
+[user]
+	email = lbarnett@flexerasoftware.com
+	name = Larry Barnett
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+[core]
+	autocrlf = false
+[http]
+	sslVerify = false
+[gui]
+	recentrepo = C:/Users/lbarnett/src/git/core
+	recentrepo = C:/Users/lbarnett/src/git/compiler
+[branch]
+	autosetuprebase = always
+[color]
+	ui = auto
+[push]
+	default = simple

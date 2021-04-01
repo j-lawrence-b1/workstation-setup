@@ -1,0 +1,33 @@
+cd /etc
+echo $TERM
+echo $PS1
+vi .bashrc
+. .bashrc
+vi .bashrc
+
+. .bashrc
+ls
+vi .bashrc
+. .bashrc
+cd Documents
+ls
+curl -S ---v retrysql-2018-04-01.tar.gz http://ghtorrent-downloads.ewi.tudelft.nl/mysql/mysql-2018-04-01.tar.gz
+cd Documents/
+cd
+cd /cygdrive/c/cygwin
+cd /cygdrive/c/cygwin64/
+ls
+curl -S -v retry -o mysql-2018-04-01.tar.gz http://ghtorrent-downloads.ewi.tudelft.nl/mysql/mysql-2018-04-01.tar.gz
+1;2;6;22c
+exit
+curl -S --retry 5 -o mysql-2018-04-01.tar.gz http://ghtorrent-downloads.ewi.tudelft.nl/mysql/mysql-2018-04-01.tar.gz
+cd Documents/
+kill -WINCH $$
+cd Documents/
+cd
+export TERM=cygwin
+vi .bashrc
+. .bashrc
+exit
+rm -r .vim
+exit
