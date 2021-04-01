@@ -1,5 +1,7 @@
 #!/bin/bash
 
+origin=$(PWD)
+
 function error_exit () {
     local e_code=$1
     shift
@@ -13,9 +15,24 @@ function error_exit () {
     exit $e_code
 }
 
+cd $HOME
+
+if [[ -d workstation-setup ]]; then
+    cd workstation-setup
+    git pull
+else
+    git clone git@github.com:j-lawrence-b1/workstation-setup
+fi
+
+cd $HOME
+rsync -av workstation-setup/dotfiles/ .
+
 packages="
-    keychain
     ansible
+    awscli
+    keychain
+    mysqlclient
+    postgresql-client
     terminator
 "
 sudo apt-get update
@@ -33,3 +50,8 @@ if [[ ! -d $conda_dir ]]; then
     fi
 fi
 bash $ddir/$conda_installer -b -p $conda_dir
+source $conda_dir/etc/profile.d/conda.sh
+
+for env_file in workstation_setup/conda-evns/*; do
+    conda env create -f $env_file
+done
