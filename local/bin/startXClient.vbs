@@ -14,7 +14,6 @@
 set objArgs = Wscript.Arguments
 
 xclient = objArgs(0)
-xargs = objArgs(1)
 
 set shell = CreateObject("Wscript.Shell")
 
@@ -22,7 +21,7 @@ xServerProcessName = "vcxsrv.exe"
 
 RunXserverProcess( xServerProcessName )
 
-RunXClient(xclient, xargs)
+RunXClient(xclient)
 
 'KillXserverProcess( xServerProcessName )
 
@@ -33,13 +32,17 @@ function RunXserverProcess( strProcess )
     end if
 end function
 
-function RunXClient(ByVal client, ByVal args)
+function RunXClient( client )
     'https://stackoverflow.com/questions/38969503/shellexecute-and-wait
     'Wscript.Shell.Run instead of Wscript.Shell.Application.ShellExecute - avoid async shell run and allow execution of code bellow
     'Larry's addition
     acmd = "C:\Windows\System32\wsl.exe -d Ubuntu-20.04 -u larry " &_
         "bash -l -c ""cd ~/; . ~/.profile; DISPLAY=$(cat /etc/resolv.conf | grep nameserver | " &_
-        "awk '{print $2}'):0 " & client & " --geometry=1260x450"""
+        "awk '{print $2}'):0 " & client
+    if client = "terminator" Then
+        acmd = acmd & " --geometry=1260x450"
+    end if
+    acmd = acmd & """"
     shell.run acmd, 0, true
 end function
 
