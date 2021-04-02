@@ -1,6 +1,8 @@
 #!/bin/bash
 
 origin=$(PWD)
+windows_user=lb999
+
 
 function error_exit () {
     local e_code=$1
@@ -15,17 +17,18 @@ function error_exit () {
     exit $e_code
 }
 
-cd $HOME
-
-if [[ -d workstation-setup ]]; then
-    cd workstation-setup
-    git pull
-else
-    git clone git@github.com:j-lawrence-b1/workstation-setup
+if [[ -n $1 ]]; then
+    windows_user=$1
 fi
+windows_home=/mnt/c/Users/$windows_user
 
 cd $HOME
-rsync -av workstation-setup/dotfiles/ .
+
+setup_dir=$windows_home/workstation-setup
+msg="The setup directory, \"$setup_dir\" does not exist. Please check it out from github."
+-d /workstation-setup || error_exit 1 "$msg"
+
+rsync -av $setup_dir/dotfiles/ .
 
 packages="
     ansible
@@ -40,16 +43,16 @@ for package in $packages; do
     sudo apt-get -y install $package
 done
 
-ddir=$HOME/Downloads
+downloads_dir=$HOME/Downloads
 conda_dir=$HOME/miniconda3
 if [[ ! -d $conda_dir ]]; then
     conda_installer=Miniconda3-latest-Linux-x86_64.sh
     conda_url="https://repo.anaconda.com/miniconda/$conda_installer"
     if [[ ! -f $ddir/$conda_installer ]]; then
-        curl --create-dirs --no-progress-meter --output $ddir/$conda_installer $conda_url
+        curl --create-dirs --no-progress-meter --output $downloads_dir/$conda_installer $conda_url
     fi
 fi
-bash $ddir/$conda_installer -b -p $conda_dir
+bash $downloads_dir/$conda_installer -b -p $conda_dir
 source $conda_dir/etc/profile.d/conda.sh
 
 for env_file in workstation_setup/conda-evns/*; do
