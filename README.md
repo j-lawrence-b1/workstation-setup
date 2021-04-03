@@ -79,10 +79,8 @@ See [this article](https://medium.com/javarevisited/using-wsl-2-with-x-server-li
    \\wsl$\Ubuntu-20.04\home\larry
    ```
    Rename the shortcut to Terminator.
-4. Copy the shortcut to "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu" 
-```
-C:\Windows\System32\wscript.exe C:\Users\lb999\local\bin\startXClient.vbs <x-client>
-```
+4. In Windows Exporer, copy the Terminator shortcut to %USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu. 
+   
 NB: This technique can be used to start any X client; However, the startXClient.vbs script doesnt currently support passing parameters to the X client app)
 
 ## Setup local db access.
