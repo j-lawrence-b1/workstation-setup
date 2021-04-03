@@ -1,3 +1,4 @@
+name: corepython
 channels:
   - defaults
   - conda-forge
@@ -8,3 +9,4 @@ dependencies:
   - pandas
   - psycopg2
   - python=3.6
+prefix: /home/larry/miniconda3/envs/corepython
