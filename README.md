@@ -1,48 +1,92 @@
-# Setup on Windows
+# Goals
+* Enable linux software and infrastructure development on a Windows 10 machine.
+* Minimize manual setup tasks.
+* Minimize time-to-live.
+
+# References
+* [Windows Subsystem for Linux Installation Instructions](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+* [WSL Memory hog workaround](https://github.com/microsoft/WSL/issues/4166)
+* [Windows Xserv Installation Instructions](https://sourceforge.net/projects/vcxsrv/)
+* [How to run WSL X Clients from windows](https://medium.com/javarevisited/using-wsl-2-with-x-server-linux-on-windows-a372263533c3)
+* [Miniconda for Linux List of Installers](https://docs.conda.io/en/latest/miniconda.html#linux-installers)
+* [Docker for Desktop Windows Installer](https://docs.docker.com/docker-for-windows/install/)
+
+# Windows side tasks 1
+
+## Install git for Windows
+[Get it here](https://git-scm.com/download/win)
+
+## Checkout the workstation_setup repo
+Open a git bash window and run:
+```
+# Use HTTP authentication (since .ssh keys aren't installed on the Windows side).
+$ git clone  https://username@github.com/j-lawrence-b1/workstation-setup.git
+```
 
 ## Install Windows Subsystem for Linux (WSL):
-[https://docs.microsoft.com/en-us/windows/wsl/install-win10](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+Follow the step-by-step procedure in the [Windows Subsystem for Linux Installation for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-Apply wsl memory hog workaround:
+Apply the wsl memory hog workaround:
 [https://github.com/microsoft/WSL/issues/4166](https://github.com/microsoft/WSL/issues/4166)
 
+# Linux side tasks 1
+
+## Install Linux packages, apps, and conda environments.
+1. Open a wsl bash window
+```
+<Windows>-R wsl -d Ubuntu-20.04
+$ bash /mnt/c/Users/lb999/workstation-setup/setup-for-wsl.sh 
+```
+
+# Windows side tasks 2
+
 ## Install vcxsrv (Windows X-server):
-[https://sourceforge.net/projects/vcxsrv/](https://sourceforge.net/projects/vcxsrv/)
+1. [Download and run the vcxserv installer](https://sourceforge.net/projects/vcxsrv/)
+2. Ensure both vcxsrv entries in the Windows firewall are enabled.
+   Control Panel-->Windows Defender Firewall-->Allow and App or Feature through Windows Defender Firewall
+   Scroll down the list to VcXsrv. Ensure both entries are enabled.
+3.  Create a Desktop shortcut to start vcxserv
+   Set the Target as:
+   ```
+   "C:\Program Files\VcXsrv\vcxsrv.exe" :0 -ac -terminate -lesspointer -multiwindow -clipboard -wgl -dpi auto
+   ```
+   Set Start in as:
+   ```
+   "C:\Program Files\VxXsrv"
+   ```
+   Rename the shortcut to VcXsrv.
+3. Set VcXsrv to start at login:
+   ```
+   <Windows Key>-R shell:startup
+   [Copy and past the VxXsrv shortcut from the desktop into the startup list.]
+   ```
+See [this article](https://medium.com/javarevisited/using-wsl-2-with-x-server-linux-on-windows-a372263533c3) for more details and installation debugging tips.
 
-## Install and configure the Terminator (Better WSL terminal):
-[https://medium.com/javarevisited/using-wsl-2-with-x-server-linux-on-windows-a372263533c3](https://medium.com/javarevisited/using-wsl-2-with-x-server-linux-on-windows-a372263533c3)
+## Configure the Terminator to run from a Windows shortcut. (Better WSL terminal):
+1. Open a git bash window and run:
+   ```
+   # Populate %USERPROFILE%\local\bin\startXClient.vbs.
+   $ mkdir -p local/bin
+   $ cp workstation_setup/local/bin/startXClient.vbs local/bin
+   ```
+2. Create a new desktop shortcut
+   Set the Target as:
+   ```
+   "C:\Windows\System32\wscript.exe %USERPROFILE%\local\bin\startXClient.vbs terminator
+   ```
+   Set the Start in location to the WSL home:
+   ```
+   \\wsl$\Ubuntu-20.04\home\larry
+   ```
+   Rename the shortcut to Terminator.
+4. In Windows Exporer, copy the Terminator shortcut to %USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu. 
+   
+NB: This technique can be used to start any X client; However, the startXClient.vbs script doesnt currently support passing parameters to the X client app)
 
-Gotchas:
-* Windows Firewall tweak: Be sure both vcsrv entries are enabled
+## Setup local db access.
 
-* The vbs script to start Terminator from the article above didn’t work for me. I started with this one: https://gist.github.com/Raneomik/202f5adb964723b16d14c3799d28e1e2#file-wsl-terminator-vbs, tweaked it into something more generic. It's in the repo at local/bin/startXClient.vbs.
-
-* To start up any wsl X client program (not just terminator):
-1. Install the X client app.
-2. Create a shortcut on the Windows desktop. Name it for the X client.
-3. Add this as the target:
-```
-C:\Windows\System32\wscript.exe C:\Users\lb999\local\bin\startXClient.vbs <x-client>
-```
-4. Set the Start in location to the WSL home:
-```
-\\wsl$\Ubuntu-20.04\home\larry
-```
-5. Copy/Move the shortcut to %USERPROFILE%\AppData\Roaming\Microsoft\Windows\"Start Menu"
-
-## Install dotfiles from Dropbox (or this repo)
-
-NB The .vimrc was adapted from here: https://github.com/mlavin/dotfiles/blob/master/vimrc
-
-## Setup Git:
-git configure user.name j-lawrence-b1
-git configure user.password <look-in-keepass>
-
-## Install conda:
-https://docs.conda.io/en/latest/miniconda.html#linux-installers
-
-## Install Docker for Desktop
-https://docs.docker.com/docker-for-windows/install/
+### Install Docker for Desktop
+[Download and install Docker](https://docs.docker.com/docker-for-windows/install/)
 
 In Settings-->General
 1. Expose daemon on tcp://localhost:2375 without TLS
@@ -51,18 +95,36 @@ In Settings-->General
 In Settings-->Resources
 1. Enable integration with the Ubuntu-20.04 distro.
 
-## Setup a postgres db docker container.
-1. Install psql client.
+### Setup db server docker containers.
+1. Create db server containers.
+   From a git bash (Windows) window, run:
    ```
-   $ sudo apt-get install postgresql-client
-   ```
-2. Create and run the postgres docker container.
-   ```
-   $ docker login  # Dockerhub repository access.
+   # Dockerhub repository access.
+   $ docker login
+   
+   # mariadb
+   $ docker pull mariadb
+   $ docker run -d -p 3306:3306 --name maria_db -e MYSQL_ROOT_PASSWORD=root mariadb
+   
+   # Postgres
    $ docker pull postgres
    $ docker run -d -p 5432:5432 --name pg_db -e POSTGRES_PASSWORD=postgres postgres
    ```
-3. Test db access.
+2. Test db access.
+   From a Terminator (linux) window, try to access the databases.
    ```
-   $ psql -h localhost -U postgres
+   # mysql
+   $ mysql -h 127.0.0.1 -u root -proot mysql
+   # postgresql
+   $ PGPASSWORD=postgres psql -h localhost -U postgres postgres
    ```
+NB: To stop/start the docker containers:
+From a git bash window, run:
+```
+# stop
+$ docker stop maria_db|pg_db
+# start
+$ docker stop maria_db|pg_db
+```
+
+```
