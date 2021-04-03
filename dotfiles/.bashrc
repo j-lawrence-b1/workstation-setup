@@ -121,12 +121,18 @@ alias ttunnel="ssh -NL 8850:localhost:8850 cdr.everlaw.com"
 alias jupyter-notebook="jupyter-notebook --no-browser"
 
 function chainme () {
-    local key=$1
-    if [[ -z $key ]]; then
-        key=~/.ssh/id_rsa
+    if [[ ! -e /usr/bin/keychain ]]; then
+        return
     fi
-    /usr/bin/keychain $key
-    . ~/.keychain/${HOSTNAME}-sh
+    n=0
+    for key in ~/.ssh/*_rsa; do
+        n=$((n+1))
+        if [[ $n = 1 ]]; then
+            /usr/bin/keychain $key
+        else
+            ssh-add $key
+        fi
+    done
 }
 
 # >>> conda initialize >>>
@@ -182,4 +188,6 @@ else
 fi
 unset color_prompt force_color_prompt
 
-conda activate base
+if [[ -n "$CONDA_EXE" ]]; then
+    conda activate base
+fi
