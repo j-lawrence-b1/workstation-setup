@@ -38,14 +38,23 @@ packages="
     postgresql-client
     terminator
 "
+echo "======================================="
+echo "Installing linux packages"
+echo "======================================="
 sudo apt-get update
 for package in $packages; do
     sudo apt-get -y install $package
 done
 
+echo "======================================="
+echo "Checking for miniconda installation"
+echo "======================================="
 downloads_dir=$HOME/Downloads
 conda_dir=$HOME/miniconda3
 if [[ ! -d $conda_dir ]]; then
+    echo "======================================="
+    echo "Installing miniconda."
+    echo "======================================="
     conda_installer=Miniconda3-latest-Linux-x86_64.sh
     conda_url="https://repo.anaconda.com/miniconda/$conda_installer"
     if [[ ! -f $ddir/$conda_installer ]]; then
@@ -55,6 +64,15 @@ fi
 bash $downloads_dir/$conda_installer -b -p $conda_dir
 source $conda_dir/etc/profile.d/conda.sh
 
+echo "======================================="
+echo "Checking conda environments"
+echo "======================================="
 for env_file in $setup_dir/conda-envs/*; do
-    conda env create -f $env_file
+    env=$(basename $env_file | sed 's/.yml$//')
+    if [[ -n $(conda info --envs | cut -d' ' -f1,1 | grep '^'${env}'$') ]]; then
+        echo "OK: $env"
+    else
+        echo "CREATING: $env"
+        conda env create -f $env_file
+    fi
 done
