@@ -92,7 +92,8 @@ In Settings-->Resources
 1. Enable integration with the Ubuntu-20.04 distro.
 
 ### Setup db server docker containers.
-1. Create and run the mysql and postgres docker containers.
+1. Create db server containers.
+   From a git bash (Windows) window, run:
    ```
    # Dockerhub repository access.
    $ docker login
