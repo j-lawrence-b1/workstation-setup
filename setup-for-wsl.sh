@@ -24,9 +24,9 @@ windows_home=/mnt/c/Users/$windows_user
 
 cd $HOME
 
-setup_dir=$windows_home/workstation-setup
+setup_dir=${windows_home}/workstation-setup
 msg="The setup directory, \"$setup_dir\" does not exist. Please check it out from github."
--d /workstation-setup || error_exit 1 "$msg"
+test -d $setup_dir || error_exit 1 "$msg"
 
 rsync -av $setup_dir/dotfiles/ .
 
@@ -34,7 +34,7 @@ packages="
     ansible
     awscli
     keychain
-    mysqlclient
+    mysql-client
     postgresql-client
     terminator
 "
@@ -55,6 +55,6 @@ fi
 bash $downloads_dir/$conda_installer -b -p $conda_dir
 source $conda_dir/etc/profile.d/conda.sh
 
-for env_file in workstation_setup/conda-evns/*; do
+for env_file in $setup_dir/conda-envs/*; do
     conda env create -f $env_file
 done
