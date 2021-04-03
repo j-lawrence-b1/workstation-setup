@@ -63,7 +63,13 @@ $ bash /mnt/c/Users/lb999/workstation-setup/setup-for-wsl.sh
 See [this article](https://medium.com/javarevisited/using-wsl-2-with-x-server-linux-on-windows-a372263533c3) for more details and installation debugging tips.
 
 ## Configure the Terminator to run from a Windows shortcut. (Better WSL terminal):
-1. Create a new desktop shortcut
+1. Open a git bash window and run:
+   ```
+   # Populate %USERPROFILE%\local\bin\startXClient.vbs.
+   $ mkdir -p local/bin
+   $ cp workstation_setup/local/bin/startXClient.vbs local/bin
+   ```
+2. Create a new desktop shortcut
    Set the Target as:
    ```
    "C:\Windows\System32\wscript.exe %USERPROFILE%\local\bin\startXClient.vbs terminator
@@ -72,8 +78,8 @@ See [this article](https://medium.com/javarevisited/using-wsl-2-with-x-server-li
    ```
    \\wsl$\Ubuntu-20.04\home\larry
    ```
-2. Rename the shortcut to Terminator.
-3. Copy the shortcut to "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu" 
+   Rename the shortcut to Terminator.
+4. Copy the shortcut to "%USERPROFILE%\AppData\Roaming\Microsoft\Windows\Start Menu" 
 ```
 C:\Windows\System32\wscript.exe C:\Users\lb999\local\bin\startXClient.vbs <x-client>
 ```
