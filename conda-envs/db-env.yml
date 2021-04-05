@@ -16,8 +16,8 @@ dependencies:
   - boto3=1.17.41=pyhd3eb1b0_0
   - botocore=1.20.41=pyhd3eb1b0_1
   - brotlipy=0.7.0=py38h27cfd23_1003
-  - ca-certificates=2021.1.19=h06a4308_1
-  - certifi=2020.12.5=py38h06a4308_0
+  - ca-certificates=2020.12.5=ha878542_0
+  - certifi=2020.12.5=py38h578d9bd_1
   - cffi=1.14.5=py38h261ae71_0
   - click=7.1.2=pyhd3eb1b0_0
   - cryptography=3.4.7=py38hd23ed53_0
@@ -91,6 +91,7 @@ dependencies:
   - openssl=1.1.1k=h27cfd23_0
   - packaging=20.9=pyh44b312d_0
   - pandas=1.2.3=py38ha9443f7_0
+  - pandas_schema=0.3.5=py_0
   - pandoc=2.12=h7f98852_0
   - pandocfilters=1.4.2=py_1
   - parso=0.8.2=pyhd3eb1b0_0
