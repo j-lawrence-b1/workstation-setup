@@ -4,7 +4,10 @@
 * Minimize time-to-live.
 
 # System Requirements.
-An Windows 10 machine with at least 16GB RAM. You could get by with less if you omit the db docker containers.
+* Intel/AMD processor
+* Up to date Windows 10
+* 16GB RAM. You could get by with less if you omit the db docker containers.
+* Enough disk to install Ubuntu (8GB + home, apps, and data).
 
 # Installation Artifacts
 On the windows side, this setup installs:
@@ -19,7 +22,7 @@ And sets up:
 
 On the Linux (WSL) side, this setup installs:
 * keychain and ssh-agent
-* ansible
+* Ansible
 * The AWS CLI
 * My current bash environment. NOTE: My ssh keys will be useless to you w/o the passphrase. Substitute your own.
 * The Terminator X-client app.
