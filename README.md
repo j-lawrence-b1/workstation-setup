@@ -12,7 +12,8 @@ On the windows side, this setup installs:
 On the Linux (WSL) side, this setup installs:
 * keychain and ssh-agent
 * ansible
-* The AWS CMy current bash environment. NOTE: My ssh keys will be useless to you w/o the passphrase. Substitute your own.
+* The AWS CLI
+* My current bash environment. NOTE: My ssh keys will be useless to you w/o the passphrase. Substitute your own.
 * The Terminator X-client app.
 * Miniconda
 * mysqldb and postgresql client apps.
