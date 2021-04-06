@@ -1,5 +1,5 @@
 # Goals
-* Enable linux software and infrastructure development on a Windows 10 machine.
+* Bootstrap linux software and infrastructure development on a Windows 10 machine.
 * Minimize manual setup tasks.
 * Minimize time-to-live.
 
@@ -10,13 +10,15 @@ On the windows side, this setup installs:
 * An X-server (VcXsrv)
 
 On the Linux (WSL) side, this setup installs:
-* My current bash environment. NOTE: My ssh keys will be useless to you w/o the passphrase. Substitute your own.
+* keychain and ssh-agent
+* ansible
+* The AWS CMy current bash environment. NOTE: My ssh keys will be useless to you w/o the passphrase. Substitute your own.
 * The Terminator X-client app.
 * Miniconda
 * mysqldb and postgresql client apps.
 
-And sets up:
-* A conda environment (db-env) for data programming using Python3
+And configures:
+* A conda environment (db-env) suitable for Python data engineering and data analysis.
 * 2 docker containers, one running mariadb and one running postgresql
 
 # References
