@@ -20,7 +20,7 @@
 Open a git bash window and run:
 ```
 # Use HTTP authentication (since .ssh keys aren't installed on the Windows side).
-$ git clone  https://username@github.com/j-lawrence-b1/workstation-setup.git
+$ git clone  https://<your-git-username>@github.com/j-lawrence-b1/workstation-setup.git
 ```
 
 ## Install Windows Subsystem for Linux (WSL):
@@ -35,7 +35,7 @@ Apply the wsl memory hog workaround:
 1. Open a wsl bash window
 ```
 <Windows>-R wsl -d Ubuntu-20.04
-$ bash /mnt/c/Users/lb999/workstation-setup/setup-for-wsl.sh 
+$ bash /mnt/c/Users/<WINDOWS_USER>/workstation-setup/setup-for-wsl.sh 
 ```
 
 # Windows side tasks 2
