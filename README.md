@@ -3,11 +3,19 @@
 * Minimize manual setup tasks.
 * Minimize time-to-live.
 
+# System Requirements.
+An Windows 10 machine with at least 16GB RAM. You could get by with less if you omit the db docker containers.
+
+# Installation Artifacts
 On the windows side, this setup installs:
 * Git
 * Windows Subsystem for Linux (WSL) running Ubuntu-20.04
 * Docker for Desktops
 * An X-server (VcXsrv)
+
+And sets up:
+* X-server autostart
+* A shortcut for running the Terminator for wsl access
 
 On the Linux (WSL) side, this setup installs:
 * keychain and ssh-agent
