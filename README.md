@@ -3,6 +3,22 @@
 * Minimize manual setup tasks.
 * Minimize time-to-live.
 
+On the windows side, this setup installs:
+* Git
+* Windows Subsystem for Linux (WSL) running Ubuntu-20.04
+* Docker for Desktops
+* An X-server (VcXsrv)
+
+On the Linux (WSL) side, this setup installs:
+* My current bash environment. NOTE: My ssh keys will be useless to you w/o the passphrase. Substitute your own.
+* The Terminator X-client app.
+* Miniconda
+* mysqldb and postgresql client apps.
+
+And sets up:
+* A conda environment (db-env) for data programming using Python3
+* 2 docker containers, one running mariadb and one running postgresql
+
 # References
 * [Windows Subsystem for Linux Installation Instructions](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 * [WSL Memory hog workaround](https://github.com/microsoft/WSL/issues/4166)
