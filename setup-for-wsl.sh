@@ -1,7 +1,7 @@
 #!/bin/bash
 
 origin=$(PWD)
-windows_user=lb999
+windows_user=lb999  # That's me!!! 
 
 
 function error_exit () {
@@ -18,7 +18,7 @@ function error_exit () {
 }
 
 if [[ -n $1 ]]; then
-    windows_user=$1
+    windows_user=$1  # That's you!!!
 fi
 windows_home=/mnt/c/Users/$windows_user
 
