@@ -1,12 +1,21 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+echo "In .bashrc"
 
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
       *) return;;
 esac
+
+# WSL bash doen't run .profile on login. Fix that.
+if grep -qsEi "(Microsoft|WSL)" /proc/version; then
+    # include .profile if it exists
+    if [ -f "$HOME/.profile" ]; then
+	    . "$HOME/.profile"
+    fi
+fi
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -23,8 +32,41 @@ HISTFILESIZE=2000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# Type less with find
+function ff () {
+# Type less with git.
+    local pattern="$*"
+
+    find * -type f -exec grep "$pattern" {} \; -print
+}
+
+# Type less with git
+alias ga="git add"
+alias gb="git branch"
+alias gch="git checkout"
+alias gco="git commit -m"
+alias gf="git fetch --all"
+alias gh="git help"
+alias gk="gitk"
+alias gl="git log"
+alias gm="git mv"
+alias gP="git push"
+alias gp="git pull"
+alias gR="git rebase -i"
+alias gr="git rm"
+alias gs="git status"
+
+function ffind () {
+    local pattern="$*"
+    echo "find * -type f -exec grep \"$pattern\" {} \; -print" | sh
+}
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -72,15 +114,21 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Terraform stuff
 export TF_PLUGIN_CACHE_DIR=$HOME/.terraform
 export TF_LOG=INFO
 
+lapip=172.20.6.115
+deskip=172.20.6.104
+alias lvnc="vncviewer -SecurityTypes VeNCrypt,TLSVnc ${lapip}:1"
+alias dvnc="vncviewer -SecurityTypes VeNCrypt,TLSVnc ${deskip}:1"
+alias vncserver="vncserver -SecurityTypes VeNCrypt,TLSVnc"
+alias eltunnel="ssh -L 4003:localhost:4000 EC-LN0028"
+alias ttunnel="ssh -NL 8850:localhost:8850 cdr.everlaw.com"
+
 # Run jupyter-notebook as a server. After access the server from
 # the Firefox on windows as localhost:8888
-alias jupyter-notebook="jupyter-notebook --no-browser"
+alias jnb="jupyter-notebook --no-browser"
 
-# Avoid entering passphrases once per reboot.
 function chainme () {
     if [[ ! -e /usr/bin/keychain ]]; then
         return
@@ -98,18 +146,20 @@ function chainme () {
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$($HOME/miniconda3/bin/conda 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/larry/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "%HOME/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/larry/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/larry/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="$HOME/miniconda3/bin:$PATH"
+        export PATH="/home/larry/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+export PATH=$HOME/local/bin:$PATH
 
 # Get a fancy prompt when inside a git repo.
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
