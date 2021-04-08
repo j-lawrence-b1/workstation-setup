@@ -1,7 +1,8 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-echo "In .bashrc"
+
+if [[ -z $BASHRC_RUN ]]; then
 
 # If not running interactively, don't do anything
 case $- in
@@ -15,6 +16,11 @@ if grep -qsEi "(Microsoft|WSL)" /proc/version; then
     if [ -f "$HOME/.profile" ]; then
 	    . "$HOME/.profile"
     fi
+    # Make WSL and Docker Desktop for Windows play nice.
+    # This assumes that the docker_relay container is running.
+    export DOCKER_HOST=tcp://localhost:23750
+    pdir=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | sed 's/.*\\//g')
+    WHOME=/mnt/c/Users/$pdir
 fi
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -38,35 +44,6 @@ shopt -s checkwinsize
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# Type less with find
-function ff () {
-# Type less with git.
-    local pattern="$*"
-
-    find * -type f -exec grep "$pattern" {} \; -print
-}
-
-# Type less with git
-alias ga="git add"
-alias gb="git branch"
-alias gch="git checkout"
-alias gco="git commit -m"
-alias gf="git fetch --all"
-alias gh="git help"
-alias gk="gitk"
-alias gl="git log"
-alias gm="git mv"
-alias gP="git push"
-alias gp="git pull"
-alias gR="git rebase -i"
-alias gr="git rm"
-alias gs="git status"
-
-function ffind () {
-    local pattern="$*"
-    echo "find * -type f -exec grep \"$pattern\" {} \; -print" | sh
-}
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -161,6 +138,7 @@ unset __conda_setup
 
 export PATH=$HOME/local/bin:$PATH
 
+
 # Get a fancy prompt when inside a git repo.
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
     GIT_PROMPT_ONLY_IN_REPO=1
@@ -202,3 +180,7 @@ unset color_prompt force_color_prompt
 if [[ -n "$CONDA_EXE" ]]; then
     conda activate base
 fi
+
+# end if [[ -z BASHRC_RUN ]]
+fi
+BASHRC_RUN=1

@@ -1,9 +1,5 @@
 #!/bin/bash
 
-origin=$(PWD)
-windows_user=lb999  # That's me!!! 
-
-
 function error_exit () {
     local e_code=$1
     shift
@@ -17,15 +13,15 @@ function error_exit () {
     exit $e_code
 }
 
-if [[ -n $1 ]]; then
-    windows_user=$1  # That's you!!!
-fi
-windows_home=/mnt/c/Users/$windows_user
 
+origin=$(PWD)
 cd $HOME
-
-setup_dir=${windows_home}/workstation-setup
-msg="The setup directory, \"$setup_dir\" does not exist. Please check it out from github."
+# The workstation-setup repo must be checked out under the users
+# Windows home directory.
+pdir=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | sed 's/.*\\//g')
+WHOME=/mnt/c/Users/$pdir
+setup_dir=${WHOME}/workstation-setup
+msg="The setup directory, \"$setup_dir\" does not exist. Please make it so."
 test -d $setup_dir || error_exit 1 "$msg"
 
 rsync -av $setup_dir/dotfiles/ .
@@ -33,6 +29,7 @@ rsync -av $setup_dir/dotfiles/ .
 packages="
     ansible
     awscli
+    docker-compose
     keychain
     mysql-client
     postgresql-client
