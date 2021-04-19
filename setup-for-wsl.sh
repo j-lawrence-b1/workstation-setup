@@ -29,11 +29,13 @@ rsync -av $setup_dir/dotfiles/ .
 packages="
     ansible
     awscli
+    build-essential
     docker-compose
     keychain
     mysql-client
     postgresql-client
     terminator
+    tree
 "
 echo "======================================="
 echo "Installing linux packages"
