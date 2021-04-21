@@ -24,6 +24,11 @@ exitError () {
 }
 
 
+code=""
+mfa_arn=""
+mfa_args=""
+role_arn=""
+
 while [ $# -gt 0 ]; do
     case "$1" in
         --profile)
@@ -51,7 +56,11 @@ while [ $# -gt 0 ]; do
 done
 
 if [[ $code = "" ]]; then
-    exitError "--code or -c is required"
+    echo "Setting up without MFA"
+    profile_suffix="_session"
+else
+    echo "Setting up with MFA"
+    profile_suffix="_mfa"
 fi
 
 unset AWS_ACCESS_KEY_ID
@@ -62,16 +71,21 @@ if [[ $profile = "" ]]; then
     exitError "--profile or -p is required"
 fi
 echo "getting profile details"
-mfa_arn=$(aws configure get mfa_serial --profile $profile)
-echo "using mfa_arn $mfa_arn"
-
-if [[ $mfa_arn = "" ]]; then
-    exitError "mfa_serial is required to be set in your .aws/credentials profile"
+if [[ $code != "" ]]; then
+    mfa_arn=$(aws configure get mfa_serial --profile $profile)
+    echo "using mfa_arn $mfa_arn"
+    if [[ $mfa_arn = "" ]]; then
+        exitError "mfa_serial is required to be set in your .aws/credentials profile"
+    fi
 fi
 
+
 role_arn="$(aws configure get role_arn --profile $profile)"
-if [[ -n $role_arn ]]; then
+if [[ $role_arn != "" ]]; then
     echo "using role_arn $role_arn"
+    if [[ "$mfa_arn" != "" ]]; then
+        mfa_args='--serial-number "$mfa_arn" --token-code "$code"'
+    fi
     return_body=$(aws sts assume-role --role-arn "$role_arn" --role-session-name "${profile}_mfa" --serial-number "$mfa_arn" --token-code "$code" --duration-seconds 7200 --output text | tail -n1)
     if [[ $? != 0 ]]; then
         exitError "unable to get credentials for role"
@@ -79,7 +93,10 @@ if [[ -n $role_arn ]]; then
     echo "$return_body"
 else
     echo "No role! Seting up access directly from the profile"
-    return_body="$(aws sts get-session-token --profile "${profile}" --serial-number "$mfa_arn" --token-code "$code" --duration-seconds 7200 --output text | tail -n1)"
+    if [[ -n "$mfa_arn" ]]; then
+        mfa_args='--serial-number "$mfa_arn" --token-code "$code"'
+    fi
+    return_body="$(aws sts get-session-token --profile "${profile}" $mfa_args --duration-seconds 7200 --output text | tail -n1)"
     if [[ $? != 0 ]]; then
         exitError "unable to get credentials for profile"
     fi
@@ -93,13 +110,16 @@ echo "session = $aws_session_token"
 echo "access key = $secret_access_key"
 echo "key id = $access_key_id"
 
-aws configure set profile.${profile}_mfa.source_profile $profile
-aws configure set profile.${profile}_mfa.aws_access_key_id "$access_key_id"
-aws configure set profile.${profile}_mfa.aws_secret_access_key "$secret_access_key"
-aws configure set profile.${profile}_mfa.aws_session_token "$aws_session_token"
+aws configure set profile.${profile}${profile_suffix}.source_profile $profile
+aws configure set profile.${profile}${profile_suffix}.aws_access_key_id "$access_key_id"
+aws configure set profile.${profile}${profile_suffix}.aws_secret_access_key "$secret_access_key"
+aws configure set profile.${profile}${profile_suffix}.aws_session_token "$aws_session_token"
 
-cat <<EOF > ~/.aws/set_mfa_env.sh
+cat <<EOF > ~/.aws/set_aws_env.sh
 export AWS_ACCESS_KEY_ID=$access_key_id
 export AWS_SECRET_ACCESS_KEY=$secret_access_key
 export AWS_SESSION_TOKEN=$aws_session_token
 EOF
+
+echo "To read the aws credentials into the shell environment, type:"
+echo "source ~/.aws/set_aws_env.sh"
