@@ -3,16 +3,28 @@
 set -uo pipefail
 
 usage () {
-  echo "Usage:"
-  echo "$0 --profile profile_name -c mfa_code"
+  echo "Usage: $0 [OPTIONS]"
+  echo "where [OPTIONS] in:"
+  echo "  -c, --code    = The code currently displayed on your configured MFA"
+  echo "                  device (Default: Do not use MFA)."
+  echo "  -h, --help    = Print usage information and exit."
+  echo "  -p, --profile = AWS profile to use as the basis for configuration"
+  echo "                  (No default)."
   echo ""
-  echo "This will create a new profile called profile_name_mfa with temporary credentials good for 2 hours"
+  echo "This script will create a new profile called <profile_name>_<suffix>"
+  echo "with temporary credentials good for 2 hours. If an mfa_code is"
+  echo "provided, <suffix> is \"mfa\"; otherwise, \"session\". As a"
+  echo "convenience, the script creates the .aws/set_aws_env.sh bash script"
+  echo "which may be sourced to install the credentials and session token"
+  echo "into the shell environment."
+  echo ""
   echo "Example:"
   echo "  You have a profile named 'prod' that assumes a role and requires mfa."
-  echo "  Running $0 -p prod -c 123456 will create a new profile 'prod_mfa' that has the session credentials for a temporary session"
+  echo "  Running $0 -p prod -c 123456 will create a new profile 'prod_mfa'"
+  echo "  that has the session credentials for a temporary session"
   echo ""
-  echo "Note: Your aws profile doesn't need to assume a role for this script to work."
-  echo "Normal IAM permissions are sufficient."
+  echo "Note: Your aws profile doesn't need to assume a role for this script"
+  echo "to work. Normal IAM permissions are sufficient."
 }
 
 exitError () {
