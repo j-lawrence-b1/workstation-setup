@@ -56,9 +56,6 @@ $ git clone  https://<your-git-username>@github.com/j-lawrence-b1/workstation-se
 ## Install Windows Subsystem for Linux (WSL):
 Follow the step-by-step procedure in the [Windows Subsystem for Linux Installation for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-Apply the wsl memory hog workaround:
-[https://github.com/microsoft/WSL/issues/4166](https://github.com/microsoft/WSL/issues/4166)
-
 # Linux side tasks 1
 
 ## Install Linux packages, apps, and conda environments.
