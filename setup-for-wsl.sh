@@ -24,6 +24,8 @@ setup_dir=${WHOME}/workstation-setup
 msg="The setup directory, \"$setup_dir\" does not exist. Please make it so."
 test -d $setup_dir || error_exit 1 "$msg"
 
+mkdir -p .local/bin
+rsync -av $setup_dir/local/bin/ .local/bin
 rsync -av $setup_dir/dotfiles/ .
 
 packages="

@@ -91,7 +91,6 @@ if [[ $code != "" ]]; then
     fi
 fi
 
-
 role_arn="$(aws configure get role_arn --profile $profile)"
 if [[ $role_arn != "" ]]; then
     echo "using role_arn $role_arn"
@@ -102,7 +101,7 @@ if [[ $role_arn != "" ]]; then
     if [[ $? != 0 ]]; then
         exitError "unable to get credentials for role"
     fi
-    echo "$return_body"
+    aws configure set profile.${profile}${profile_suffix}.source_profile $profile
 else
     echo "No role! Seting up access directly from the profile"
     if [[ -n "$mfa_arn" ]]; then
@@ -117,12 +116,6 @@ access_key_id=$(echo "$return_body" | awk '{ print $2 }' )
 secret_access_key=$(echo "$return_body" | awk '{ print $4 }' )
 aws_session_token=$(echo "$return_body" | awk '{ print $5 }' )
 
-echo ""
-echo "session = $aws_session_token"
-echo "access key = $secret_access_key"
-echo "key id = $access_key_id"
-
-aws configure set profile.${profile}${profile_suffix}.source_profile $profile
 aws configure set profile.${profile}${profile_suffix}.aws_access_key_id "$access_key_id"
 aws configure set profile.${profile}${profile_suffix}.aws_secret_access_key "$secret_access_key"
 aws configure set profile.${profile}${profile_suffix}.aws_session_token "$aws_session_token"

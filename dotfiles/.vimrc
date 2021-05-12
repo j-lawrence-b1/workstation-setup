@@ -79,6 +79,8 @@ Plugin 'jelera/vim-javascript-syntax'
 Plugin 'cakebaker/scss-syntax.vim'
 " Asynchronous Lint Engine
 Plugin 'dense-analysis/ale'
+" Perl syntax highlighting
+Plugin 'vim-perl/vim-perl'
 
 if iCanHazVundle == 0
     echo "Installing Bundles, please ignore key map error messages"
@@ -91,7 +93,7 @@ endif
 set t_Co=256
 colorscheme emacs
 
-set colorcolumn=80,100
+set colorcolumn=90
 
 highlight ColorColumn ctermbg=238 guibg=#232728
 
@@ -105,6 +107,7 @@ set list
 set listchars=tab:→\ ,trail:·,nbsp:·
 
 " Different tab/space stops"
+autocmd Filetype tf setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 autocmd Filetype yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 autocmd Filetype html setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 autocmd Filetype css setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
