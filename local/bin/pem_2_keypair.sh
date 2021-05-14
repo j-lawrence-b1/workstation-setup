@@ -28,7 +28,7 @@ pub_key="${pem_dir}${rsa_base}.pub"
 if [[ -f $pri_key || -f $pub_key ]]; then
     echo -n "The $rsa_base keypair already exists. Overwrite? [y/n]: "
     read ans
-    if [[ -z $(echo "$ans" | grep -i '^y') ]]; then
+    if ! [[ $ans =~ ^[Yy] ]]; then
         echo "Exiting at operator request"
         exit 1
     fi
