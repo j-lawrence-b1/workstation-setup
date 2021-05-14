@@ -91,8 +91,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export TF_PLUGIN_CACHE_DIR=$HOME/.terraform
-export TF_LOG=INFO
+#export TF_PLUGIN_CACHE_DIR=$HOME/.terraform
+#export TF_LOG=INFO
 
 lapip=172.20.6.115
 deskip=172.20.6.104
@@ -119,18 +119,31 @@ function chainme () {
             ssh-add $key
         fi
     done
+    . ~/.keychain/${HOSTNAME}-sh
+}
+
+function awslogin () {
+    local profile=${1:-terraform}
+
+    bash ~/.local/bin/set_aws_session.sh -p $profile
+    . ~/.aws/set_aws_env.sh
+}
+
+function rebash () {
+    unset BASHRC_RUN
+    . ~/.bashrc
 }
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/larry/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('${HOME}/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/larry/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/larry/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "${HOME}/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "${HOME}/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/larry/miniconda3/bin:$PATH"
+        export PATH="${HOME}/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
