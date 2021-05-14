@@ -56,13 +56,33 @@ $ git clone  https://<your-git-username>@github.com/j-lawrence-b1/workstation-se
 ## Install Windows Subsystem for Linux (WSL):
 Follow the step-by-step procedure in the [Windows Subsystem for Linux Installation for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
-Apply the wsl memory hog workaround:
-[https://github.com/microsoft/WSL/issues/4166](https://github.com/microsoft/WSL/issues/4166)
-
 # Linux side tasks 1
 
+## Allow sudo to run without entering a password.
+1. Safety First! Leave yourselve a way back if you screw up the sudoers file edit!
+```
+<Windows>-R wsl -d Ubuntu-20.04
+# Switch to the root user so you can restore the sudoers file from the backup if things go wrong.
+# ****LEAVE THIS WINDOW OPEN WHILE PERFORMINAG THE NEXT STEP****
+$ sudo su
+<root>$
+```
+2. Open a second wsl terminal to do the sudoers file edit.
+```
+<Windows>-R wsl -d Ubuntu-20.04
+$ sudo sed -i.bak 's/%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL
+# Test that sudo now works without a passwd.
+$ sudo echo hello
+hello
+```
+3. IF step 2 fails, go back to the first window and restore the original sudoers file from the .bak file.
+```
+<root>$ cd /etc
+<root>$ mv sudoers.bak sudoers
+```
+
 ## Install Linux packages, apps, and conda environments.
-1. Open a wsl bash window
+1. Open a wsl bash window. Edit /etc/sudoer "in place" with sed
 ```
 <Windows>-R wsl -d Ubuntu-20.04
 $ bash /mnt/c/Users/<WINDOWS_USER>/workstation-setup/setup-for-wsl.sh 
