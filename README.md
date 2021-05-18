@@ -56,6 +56,13 @@ $ git clone  https://<your-git-username>@github.com/j-lawrence-b1/workstation-se
 ## Install Windows Subsystem for Linux (WSL):
 Follow the step-by-step procedure in the [Windows Subsystem for Linux Installation for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
+### Splunk puppet workaround (only needed if you work there)
+Splunk runs a Puppet agent that manages login permissions on their Windows laptops. This infrastruction won't allow WSL logins ("Not approved for this type of logon") unless  Virtualization is detected. Unfortunately, the way it does this is a little crude and requires the Hyper-V Windows feature to be explicitly enabled. The WSL2 installation, on the other hand, only enables the "Windows Virtualization Platform" feature, a Hyper-V subset. But fear not! Hyper-V and Windows Virtualization Platform are compatible, so the workaround is to just enable Hyper-V also. To do so:
+1. Open a Powershell window as Administrator.
+2. Run:
+```
+PS > dism.exe /online /enable-feature /featurename:Microsoft-Hyper-V-Management-Clients /all /norestart
+```
 # Linux side tasks 1
 
 ## Allow sudo to run without entering a password.
