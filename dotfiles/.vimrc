@@ -25,7 +25,7 @@ au BufReadPost *
 set fileencoding=utf-8
 
 " No backups
-set backupdir=$HOME/.vim/backupdir
+set backupdir=$HOME/.vim/backupfiles
 set directory=$HOME/.vim/swapfiles
 
 " Keep lots of history/undo

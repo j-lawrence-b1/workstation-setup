@@ -1,5 +1,11 @@
 #!/bin/bash
 
+function ctrl_c () {
+    error_exit 130 "Exiting on CTRL-C"
+    exit 130
+}
+trap ctrl_c INT
+
 function error_exit () {
     local e_code=$1
     shift
@@ -14,12 +20,12 @@ function error_exit () {
 }
 
 
-origin=$(PWD)
+origin=$(pwd)
 cd $HOME
 # The workstation-setup repo must be checked out under the users
 # Windows home directory.
-pdir=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | sed 's/.*\\//g')
-WHOME=/mnt/c/Users/$pdir
+pdir=$(cmd.exe /c "echo %USERPROFILE%" 2>/dev/null | sed -e 's/.*\\//g' | tr -d "\r")
+WHOME="/mnt/c/Users/$pdir"
 setup_dir=${WHOME}/workstation-setup
 msg="The setup directory, \"$setup_dir\" does not exist. Please make it so."
 test -d $setup_dir || error_exit 1 "$msg"
@@ -27,6 +33,7 @@ test -d $setup_dir || error_exit 1 "$msg"
 mkdir -p .local/bin
 rsync -av $setup_dir/local/bin/ .local/bin
 rsync -av $setup_dir/dotfiles/ .
+mkdir -p $HOME/.vim/backupfiles $HOME/.vim/swapfiles
 
 packages="
     ansible

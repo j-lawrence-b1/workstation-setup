@@ -107,13 +107,12 @@ alias ttunnel="ssh -NL 8850:localhost:8850 cdr.everlaw.com"
 alias jnb="jupyter-notebook --no-browser"
 
 function chainme () {
-    if [[ ! -e /usr/bin/keychain ]]; then
+    if ! [[ -e /usr/bin/keychain ]]; then
         return
     fi
     n=0
     for key in ~/.ssh/*_rsa; do
-        n=$((n+1))
-        if [[ $n = 1 ]]; then
+	if [[ -z $(pgrep ssh-agent) ]]; then
             /usr/bin/keychain $key
         else
             ssh-add $key
