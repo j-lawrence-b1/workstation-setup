@@ -135,43 +135,10 @@ function awslogin () {
     . ~/.aws/set_aws_env.sh
 }
 
-function vaultlogin () {
-    local venv=~/.aws/set_vault_env.sh
-    if ! [[ -f $venv ]]; then
-        echo "export VAULT_ADDR=https://secrets.splunkit.io" > $venv
-        echo "export VAULT_NAMESPACE=scip/itdvo" >> $venv
-    fi
-    . $venv
-}
-
 function rebash () {
     unset BASHRC_RUN
     . ~/.bashrc
 }
-
-####################
-# BEGIN Splunk stuff
-####################
-# AWS Login shortcuts
-alias sandbox='echo; export AWS_PROFILE=itops-sandbox; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-sandbox'
-alias itops-dev='echo; export AWS_PROFILE=itops-dev; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-dev'
-# SPLKAdministratorAccess Role
-# alias itops-devsplk='echo; export AWS_PROFILE=itops-devsplk; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-devsplk'
-# AWSAdministratorAccess Role
-alias itdvo-devadm='echo; export AWS_PROFILE=itdvo-devadm; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itdvo-devadm'
-# SPLKAdministratorAccess Role
-alias itdvo-devsplk='echo; export AWS_PROFILE=itdvo-devsplk; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itdvo-devsplk'
-alias qa='echo; export AWS_PROFILE=itops-qa; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-qa'
-alias main='echo; export AWS_PROFILE=itops-main; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-main'
-alias prod='echo; export AWS_PROFILE=itops-production; echo "AWS_PROFILE=$AWS_PROFILE"; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo; aws sso login --profile itops-production'
-
-# GitLab shortcuts
-export GOPATH=$HOME/go
-export GOPRIVATE="cd.splunkdev.com"
-export PATH=$PATH:$GOPATH/bin
-##################
-# END Splunk stuff
-##################
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
