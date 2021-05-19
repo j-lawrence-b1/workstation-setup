@@ -94,25 +94,32 @@ fi
 #export TF_PLUGIN_CACHE_DIR=$HOME/.terraform
 #export TF_LOG=INFO
 
-lapip=172.20.6.115
-deskip=172.20.6.104
-alias lvnc="vncviewer -SecurityTypes VeNCrypt,TLSVnc ${lapip}:1"
-alias dvnc="vncviewer -SecurityTypes VeNCrypt,TLSVnc ${deskip}:1"
-alias vncserver="vncserver -SecurityTypes VeNCrypt,TLSVnc"
-alias eltunnel="ssh -L 4003:localhost:4000 EC-LN0028"
-alias ttunnel="ssh -NL 8850:localhost:8850 cdr.everlaw.com"
+# Start an ssh tunnel: Obsolete, but left as a reference.
+#alias eltunnel="ssh -L 4003:localhost:4000 EC-LN0028"
+#alias ttunnel="ssh -NL 8850:localhost:8850 cdr.everlaw.com"
 
 # Run jupyter-notebook as a server. After access the server from
 # the Firefox on windows as localhost:8888
 alias jnb="jupyter-notebook --no-browser"
 
+alias cls=clear
+alias h=history
+
+function hed () {
+    history -w
+    cp ~/.bash_history ~/.bash_history.bak
+    vi ~/.bash_history
+    history -c
+    history -r ~/.bash_history
+}
+
+
 function chainme () {
     if ! [[ -e /usr/bin/keychain ]]; then
         return
     fi
-    n=0
     for key in ~/.ssh/*_rsa; do
-	if [[ -z $(pgrep ssh-agent) ]]; then
+        if [[ -z $(pgrep ssh-agent) ]]; then
             /usr/bin/keychain $key
         else
             ssh-add $key
@@ -128,10 +135,43 @@ function awslogin () {
     . ~/.aws/set_aws_env.sh
 }
 
+function vaultlogin () {
+    local venv=~/.aws/set_vault_env.sh
+    if ! [[ -f $venv ]]; then
+        echo "export VAULT_ADDR=https://secrets.splunkit.io" > $venv
+        echo "export VAULT_NAMESPACE=scip/itdvo" >> $venv
+    fi
+    . $venv
+}
+
 function rebash () {
     unset BASHRC_RUN
     . ~/.bashrc
 }
+
+####################
+# BEGIN Splunk stuff
+####################
+# AWS Login shortcuts
+alias sandbox='echo; export AWS_PROFILE=itops-sandbox; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-sandbox'
+alias itops-dev='echo; export AWS_PROFILE=itops-dev; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-dev'
+# SPLKAdministratorAccess Role
+# alias itops-devsplk='echo; export AWS_PROFILE=itops-devsplk; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-devsplk'
+# AWSAdministratorAccess Role
+alias itdvo-devadm='echo; export AWS_PROFILE=itdvo-devadm; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itdvo-devadm'
+# SPLKAdministratorAccess Role
+alias itdvo-devsplk='echo; export AWS_PROFILE=itdvo-devsplk; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itdvo-devsplk'
+alias qa='echo; export AWS_PROFILE=itops-qa; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-qa'
+alias main='echo; export AWS_PROFILE=itops-main; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-main'
+alias prod='echo; export AWS_PROFILE=itops-production; echo "AWS_PROFILE=$AWS_PROFILE"; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo; aws sso login --profile itops-production'
+
+# GitLab shortcuts
+export GOPATH=$HOME/go
+export GOPRIVATE="cd.splunkdev.com"
+export PATH=$PATH:$GOPATH/bin
+##################
+# END Splunk stuff
+##################
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
