@@ -91,6 +91,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# NOTE: Everything above is more-or-less copied straight from /etc/skel/.bashrc
+
+#######################
+# BEGIN my stuff
+#######################
 #export TF_PLUGIN_CACHE_DIR=$HOME/.terraform
 #export TF_LOG=INFO
 
@@ -105,6 +110,7 @@ alias jnb="jupyter-notebook --no-browser"
 alias cls=clear
 alias h=history
 
+# Edit the bash history with vi!
 function hed () {
     history -w
     cp ~/.bash_history ~/.bash_history.bak
@@ -113,7 +119,7 @@ function hed () {
     history -r ~/.bash_history
 }
 
-
+# Add ssh keys to the linux keychain.
 function chainme () {
     if ! [[ -e /usr/bin/keychain ]]; then
         return
@@ -135,6 +141,15 @@ function awslogin () {
     . ~/.aws/set_aws_env.sh
 }
 
+function rebash () {
+    unset BASHRC_RUN
+    . ~/.bashrc
+}
+
+####################
+# BEGIN Splunk stuff
+####################
+
 function vaultlogin () {
     local venv=~/.aws/set_vault_env.sh
     if ! [[ -f $venv ]]; then
@@ -144,14 +159,6 @@ function vaultlogin () {
     . $venv
 }
 
-function rebash () {
-    unset BASHRC_RUN
-    . ~/.bashrc
-}
-
-####################
-# BEGIN Splunk stuff
-####################
 # AWS Login shortcuts
 alias sandbox='echo; export AWS_PROFILE=itops-sandbox; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-sandbox'
 alias itops-dev='echo; export AWS_PROFILE=itops-dev; export AWS_DEFAULT_REGION=us-west-2; echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION"; echo "AWS_PROFILE=$AWS_PROFILE"; echo; aws sso login --profile itops-dev'
@@ -169,6 +176,7 @@ alias prod='echo; export AWS_PROFILE=itops-production; echo "AWS_PROFILE=$AWS_PR
 export GOPATH=$HOME/go
 export GOPRIVATE="cd.splunkdev.com"
 export PATH=$PATH:$GOPATH/bin
+
 ##################
 # END Splunk stuff
 ##################
@@ -188,8 +196,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-export PATH=$HOME/local/bin:$PATH
-
+export PATH=$HOME/.local/bin:$PATH
 
 # Get a fancy prompt when inside a git repo.
 if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then

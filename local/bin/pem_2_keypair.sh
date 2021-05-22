@@ -24,11 +24,12 @@ pem_file=$(basename $pem_path)
 pem_base=${pem_file%%.*}
 rsa_base=${2:-$pem_base}
 pri_key="${pem_dir}/${rsa_base}"
-pub_key="${pem_dir}${rsa_base}.pub"
-if [[ -f $pri_key || -f $pub_key ]]; then
+pub_key="${pem_dir}/${rsa_base}.pub"
+if [[ -f "$pri_key" &&  -f "$pub_key" ]]; then
+    echo "$pub_key exists"
     echo -n "The $rsa_base keypair already exists. Overwrite? [y/n]: "
     read ans
-    if ! [[ $ans =~ ^[Yy] ]]; then
+    if [[ $ans =~ '^[Yy]' ]]; then
         echo "Exiting at operator request"
         exit 1
     fi
