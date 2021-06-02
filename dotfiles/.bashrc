@@ -121,16 +121,7 @@ function hed () {
 
 # Add ssh keys to the linux keychain.
 function chainme () {
-    if ! [[ -e /usr/bin/keychain ]]; then
-        return
-    fi
-    for key in ~/.ssh/*_rsa; do
-        if [[ -z $(pgrep ssh-agent) ]]; then
-            /usr/bin/keychain $key
-        else
-            ssh-add $key
-        fi
-    done
+    /usr/bin/keychain ~/.ssh/*_rsa
     . ~/.keychain/${HOSTNAME}-sh
 }
 
